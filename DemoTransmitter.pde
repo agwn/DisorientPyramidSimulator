@@ -3,12 +3,12 @@ class DemoTransmitter extends Thread {
   int animationStep = 0;
   
   color[] MakeDemoFrame() {
-    int image_size = strips*lights_per_strip;
+    int image_size = strips*ledsPerStrip;
   
     color[] imageData = new color[image_size];
   
     for (int i = 0; i < imageData.length; i++) {
-      if (animationStep == i%10) {
+      if (animationStep == i%3) {
         imageData[i] = color(255, 255, 255);
       }
       else {
@@ -16,7 +16,7 @@ class DemoTransmitter extends Thread {
       }
     }
     
-    animationStep = (animationStep + 1)%10;
+    animationStep = (animationStep + 1)%3;
   
     return imageData;
   }

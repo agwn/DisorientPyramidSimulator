@@ -22,7 +22,7 @@ class Segment {
     m_endNode = endNode;
   }
   
-  void draw() {
+  void draw(color[] imageData) {
     for (int i = 0; i < m_length; i++) { 
   
       // Calculate the location based on the end points
@@ -31,17 +31,15 @@ class Segment {
       float z = Nodes.get(m_startNode).m_posZ - (Nodes.get(m_startNode).m_posZ - Nodes.get(m_endNode).m_posZ)/m_length*i;
       
       // set the color based on the image data
-//      blinkeyLights.get(i).setColor(imageData[i]);
+      color c = imageData[m_strip + (m_offset + i)*strips];
       
       pushMatrix();
         translate(x, y, z);
-        stroke(255);
-        fill(255);
-//        stroke(c);
-//        fill(c);
+        stroke(c);
+        fill(c);
 //        //scale(rad);
-        //ellipse(0,0,1.5,1.5);
-        point(0,0);
+        ellipse(0,0,.02,.02);
+        //point(0,0);
        popMatrix();
     }
   }

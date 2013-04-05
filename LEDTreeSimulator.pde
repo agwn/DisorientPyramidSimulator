@@ -7,9 +7,9 @@ import peasy.org.apache.commons.math.geometry.*;
 import processing.opengl.*;
 import javax.media.opengl.GL;
 
-int lights_per_strip = 32*5;
+int ledsPerStrip = 32*5;
 int strips = 40;
-int packet_length = strips*lights_per_strip*3 + 1;
+int packetLength = strips*ledsPerStrip*3 + 1;
 
 boolean pixelSegments = true; // Display rail segments as pixels or as lines?
 
@@ -32,7 +32,7 @@ List<Segment> Segments;
 Fixture tree;
 
 void setup() {
-  size(1024, 850, OPENGL);
+  size(600, 600, OPENGL);
   colorMode(RGB, 255);
   frameRate(30);
   
@@ -43,13 +43,13 @@ void setup() {
   pgl.endGL(); //end opengl
 
   //size(1680, 1000, OPENGL);
-  pCamera = new PeasyCam(this, 0, 0, 0, 2);
+  pCamera = new PeasyCam(this, 0, 0, 0, 3);
   pCamera.setMinimumDistance(1);
   pCamera.setMaximumDistance(10);
 //  pCamera.setSuppressRollRotationMode();
 //  pCamera.rotateX(.6);
   
-  // Fix the front clipping plane?
+  // Fix the front clipping plane
   float fov = PI/3.0;
   float cameraZ = (height/2.0) / tan(fov/2.0);
   perspective(fov, float(width)/float(height), 
@@ -57,7 +57,7 @@ void setup() {
   
   newImageQueue = new ArrayBlockingQueue(2);
 
-  imageHud = new ImageHud(20, height-160-20, strips, lights_per_strip);
+  imageHud = new ImageHud(20, height-160-20, strips, ledsPerStrip);
 
   udp = new UDP( this, 58082 );
   udp.listen( true );
@@ -101,8 +101,8 @@ void receive(byte[] data, String ip, int port) {
     return;
   }
 
-  if (data.length != packet_length) {
-    println("Packet size mismatch. Expected "+packet_length+", got " + data.length);
+  if (data.length != packetLength) {
+    println("Packet size mismatch. Expected "+packetLength+", got " + data.length);
     return;
   }
 
@@ -111,9 +111,9 @@ void receive(byte[] data, String ip, int port) {
     return;
   }
 
-  color[] newImage = new color[strips*lights_per_strip];
+  color[] newImage = new color[strips*ledsPerStrip];
 
-  for (int i=0; i< strips*lights_per_strip; i++) {
+  for (int i=0; i< strips*ledsPerStrip; i++) {
     // Processing doesn't like it when you call the color function while in an event
     // go figure
     newImage[i] = (int)(0xff<<24 | convertByte(data[i*3 + 1])<<16) | (convertByte(data[i*3 + 2])<<8) | (convertByte(data[i*3 + 3]));
@@ -132,7 +132,7 @@ void draw() {
   background(0);
 
   if (currentImage != null) {
-    tree.draw();
+    tree.draw(currentImage);
   }
 
   imageHud.draw();

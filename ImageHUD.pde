@@ -11,7 +11,7 @@ class ImageHud {
   
   void update(color[] imageData) {
     img.loadPixels();
-    for (int i = 0; i < strips*lights_per_strip; i++) {
+    for (int i = 0; i < strips*ledsPerStrip; i++) {
       img.pixels[i] = imageData[i];
     }
     img.updatePixels();

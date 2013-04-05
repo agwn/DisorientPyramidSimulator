@@ -8,9 +8,9 @@ class Fixture {
     for (Segment seg : segments);
   }
   
-  void draw() {
+  void draw(color[] imageData) {
     for (Segment segment : m_segments) { 
-      segment.draw();
+      segment.draw(imageData);
     }
   }
 }
