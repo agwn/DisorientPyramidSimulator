@@ -18,6 +18,8 @@ class ImageHud {
   }
   
   void draw() {
+    pCamera.beginHUD();
       image(img, x, y);
+    pCamera.endHUD();
   }
 }

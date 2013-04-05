@@ -1,6 +1,12 @@
 import hypermedia.net.*;
 import java.util.concurrent.*;
 
+import peasy.org.apache.commons.math.*;
+import peasy.*;
+import peasy.org.apache.commons.math.geometry.*;
+import processing.opengl.*;
+import javax.media.opengl.GL;
+
 int lights_per_strip = 32*5;
 int strips = 40;
 int packet_length = strips*lights_per_strip*3 + 1;
@@ -11,6 +17,7 @@ Boolean demoMode = true;
 BlockingQueue newImageQueue;
 
 UDP udp;
+PeasyCam pCamera;
 
 ImageHud imageHud;
 DemoTransmitter demoTransmitter;
@@ -19,31 +26,35 @@ int animationStep = 0;
 int maxConvertedByte = 0;
 
 int BOX0=0;
-int BOX1=8;
-int BOX2=16;
-int BOX3=24;
-int BOX4=32;
 
-List<Segment> LeftRailSegments;
-Fixture leftRail;
-
-List<Segment> RightRailSegments;
-Fixture rightRail;
-
-List<Segment> LeftTrapazoidSegments;
-Fixture leftTrapazoid;
-
-List<Segment> CenterTrapazoidSegments;
-Fixture centerTrap;
-
-List<Segment> RightTrapazoidSegments;
-Fixture rightTrapazoid;
-
+List<Node> Nodes;
+List<Segment> Segments;
+Fixture tree;
 
 void setup() {
-  size(1400, 350);
+  size(1024, 850, OPENGL);
   colorMode(RGB, 255);
   frameRate(30);
+  
+  // Turn on vsync to prevent tearing
+  PGraphicsOpenGL pgl = (PGraphicsOpenGL) g; //processing graphics object
+  GL gl = pgl.beginGL(); //begin opengl
+  gl.setSwapInterval(2); //set vertical sync on
+  pgl.endGL(); //end opengl
+
+  //size(1680, 1000, OPENGL);
+  pCamera = new PeasyCam(this, 0, 0, 0, 2);
+  pCamera.setMinimumDistance(1);
+  pCamera.setMaximumDistance(10);
+//  pCamera.setSuppressRollRotationMode();
+//  pCamera.rotateX(.6);
+  
+  // Fix the front clipping plane?
+  float fov = PI/3.0;
+  float cameraZ = (height/2.0) / tan(fov/2.0);
+  perspective(fov, float(width)/float(height), 
+            cameraZ/1000.0, cameraZ*10.0);
+  
   newImageQueue = new ArrayBlockingQueue(2);
 
   imageHud = new ImageHud(20, height-160-20, strips, lights_per_strip);
@@ -51,20 +62,9 @@ void setup() {
   udp = new UDP( this, 58082 );
   udp.listen( true );
 
-  defineLeftRail();   // Define the rail segments by where they are in pixel space
-  leftRail = new Fixture(LeftRailSegments, new PVector(100, 0));
-
-  defineRightRail();
-  rightRail = new Fixture(RightRailSegments, new PVector(750, 0), true);
-
-  defineLeftTrapazoid();
-  leftTrapazoid = new Fixture(LeftTrapazoidSegments, new PVector(250, 200)); 
-
-  defineCenterTrapazoid();
-  centerTrap = new Fixture(CenterTrapazoidSegments, new PVector(600, 200));
-
-  defineRightTrapazoid();
-  rightTrapazoid = new Fixture(RightTrapazoidSegments, new PVector(950, 200));
+  defineNodes();
+  defineSegments();
+  tree = new Fixture(Segments);
 
   demoTransmitter = new DemoTransmitter();
   demoTransmitter.start();
@@ -132,11 +132,7 @@ void draw() {
   background(0);
 
   if (currentImage != null) {
-    leftRail.draw();
-    rightRail.draw();
-    leftTrapazoid.draw();
-    centerTrap.draw();
-    rightTrapazoid.draw();
+    tree.draw();
   }
 
   imageHud.draw();

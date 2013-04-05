@@ -1,68 +1,48 @@
 class Segment {
-  String m_name;
-  List<SubSegment> subSegments;
-//  PVector m_startPosition;
-//  PVector m_endPosition;
-  boolean rail = false;
+  public int m_strip;
+  public int m_offset;
+  public int m_length;
 
-  // For rails using the integer "point" system
-  Segment(String name, int strip, int offset, int length, int startPoint, int endPoint) {
+  public int m_name;
+  public int m_startNode;
+  public int m_endNode;
+  
+  // For LED Tree segments
+  // @param name Name of the segment
+  // @param strip Strip number (0-7, one for each bb8 output)
+  // @param offset 
+  // @param startNode Node that the segment starts at
+  // @param endNode Node that the segment ends at
+  Segment(int name, int strip, int offset, int startNode, int endNode) {
     m_name = name;
-    rail = true;
-
-    SubSegment sub = new SubSegment(name, strip, offset, length, startPoint, endPoint);
-    subSegments = new LinkedList<SubSegment>();
-    subSegments.add(sub);
+    m_strip = strip;
+    m_offset = offset;
+    m_length = 32;  // For simplicity
+    m_startNode = startNode;
+    m_endNode = endNode;
   }
-
-  // For Trap segments that span one strip. Negative lengths are strips that run backwards!
-  Segment(int num, int strip, int start, int length) {
-    SubSegment sub = new SubSegment(num, strip, start, length, 0);
-    subSegments = new LinkedList<SubSegment>();
-    subSegments.add(sub);
-  }
-
-  // For Trap segments that span two strips. Negative lengths are strips that run backwards!
-  Segment(int num, int strip1, int start1, int length1, int strip2, int start2, int length2) {
-    SubSegment sub1 = new SubSegment(num, strip1, start1, length1, 0);
-    SubSegment sub2 = new SubSegment(num, strip2, start2, length2, abs(length1));
-
-    subSegments = new LinkedList<SubSegment>();
-    subSegments.add(sub1);
-    subSegments.add(sub2);
-  }
-
-
+  
   void draw() {
-    strokeWeight(3);
-
-    if (rail && pixelSegments == false) { // Just draw a line. Much easier.
-      SubSegment seg = subSegments.get(0);
-      stroke(currentImage[seg.m_strip + (strips * (seg.m_start + 8))]); // Some of the definitions overlap for some reason!
-                                                                        // Sampling 8 pixels in from start to prevent two
-                                                                        // segments from triggering from one transmitted segment 
-      line(seg.pixel_start_position.x, seg.pixel_start_position.y, seg.pixel_end_position.x, seg.pixel_end_position.y);
-    } 
-
-    else {
-
-      for (SubSegment seg : subSegments) {
-        float amt = 1.0 / abs(seg.m_length);
-
-        for (int x=0; x < abs(seg.m_length); x++) { // Draw all the subsegments!
-          float q = amt * x;
-          if (seg.m_length < 0) { // Change the strip addressing depending on whether we're going backwards (negative length) or not
-              stroke(currentImage[seg.m_strip + (strips * (seg.m_start - x))]);
-          } 
-          else {
-            stroke(currentImage[seg.m_strip + strips*(seg.m_start + x)]);
-          }
-                    
-          PVector point = new PVector(lerp(seg.pixel_start_position.x, seg.pixel_end_position.x, q), lerp(seg.pixel_start_position.y, seg.pixel_end_position.y, q)); 
-          
-          point(point.x, point.y);
-        }
-      }
+    for (int i = 0; i < m_length; i++) { 
+  
+      // Calculate the location based on the end points
+      float x = Nodes.get(m_startNode).m_posX - (Nodes.get(m_startNode).m_posX - Nodes.get(m_endNode).m_posX)/m_length*i;
+      float y = Nodes.get(m_startNode).m_posY - (Nodes.get(m_startNode).m_posY - Nodes.get(m_endNode).m_posY)/m_length*i;
+      float z = Nodes.get(m_startNode).m_posZ - (Nodes.get(m_startNode).m_posZ - Nodes.get(m_endNode).m_posZ)/m_length*i;
+      
+      // set the color based on the image data
+//      blinkeyLights.get(i).setColor(imageData[i]);
+      
+      pushMatrix();
+        translate(x, y, z);
+        stroke(255);
+        fill(255);
+//        stroke(c);
+//        fill(c);
+//        //scale(rad);
+        //ellipse(0,0,1.5,1.5);
+        point(0,0);
+       popMatrix();
     }
   }
 }
