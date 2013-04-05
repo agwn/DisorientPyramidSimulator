@@ -4,7 +4,7 @@ class Node {
   public float m_posY;
   public float m_posZ;
   
-  // For graph nodes
+  // For graph Vertexs
   // @param name Name of the segment
   // @param posX // Spacial position of the node
   // @param posY

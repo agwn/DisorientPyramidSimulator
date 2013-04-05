@@ -11,8 +11,6 @@ int ledsPerStrip = 32*5;
 int strips = 40;
 int packetLength = strips*ledsPerStrip*3 + 1;
 
-boolean pixelSegments = true; // Display rail segments as pixels or as lines?
-
 Boolean demoMode = true;
 BlockingQueue newImageQueue;
 
@@ -28,7 +26,7 @@ int maxConvertedByte = 0;
 int BOX0=0;
 
 List<Node> Nodes;
-List<Segment> Segments;
+List<Edge> Edges;
 Fixture tree;
 
 void setup() {
@@ -63,8 +61,8 @@ void setup() {
   udp.listen( true );
 
   defineNodes();
-  defineSegments();
-  tree = new Fixture(Segments);
+  defineEdges();
+  tree = new Fixture(Edges);
 
   demoTransmitter = new DemoTransmitter();
   demoTransmitter.start();

@@ -11,21 +11,21 @@ void defineNodes() {
   Nodes.add(new Node(5,      0,      0, -1.414));
 }
 
-void defineSegments() {
-  Segments = new LinkedList<Segment>();
-  Segments.add(new Segment(0, BOX0 + 0,   0, 0, 1));
-  Segments.add(new Segment(0, BOX0 + 0,  34, 1, 2));
-  Segments.add(new Segment(0, BOX0 + 0,  68, 2, 3));
-  Segments.add(new Segment(0, BOX0 + 0, 102, 3, 0));
+void defineEdges() {
+  Edges = new LinkedList<Edge>();
+  Edges.add(new Edge(0, BOX0 + 7,  26, 0, 1));
+  Edges.add(new Edge(0, BOX0 + 7,  60, 1, 2));
+  Edges.add(new Edge(0, BOX0 + 7,  94, 2, 3));
+  Edges.add(new Edge(0, BOX0 + 7, 128, 3, 0));
   
-  Segments.add(new Segment(0, BOX0 + 1,   0, 0, 4));
-  Segments.add(new Segment(0, BOX0 + 1,  34, 4, 2));
-  Segments.add(new Segment(0, BOX0 + 1,  68, 2, 5));
-  Segments.add(new Segment(0, BOX0 + 1, 102, 5, 0));
+  Edges.add(new Edge(0, BOX0 + 5,  26, 0, 4));
+  Edges.add(new Edge(0, BOX0 + 5,  60, 4, 2));
+  Edges.add(new Edge(0, BOX0 + 5,  94, 2, 5));
+  Edges.add(new Edge(0, BOX0 + 5, 128, 5, 0));
   
-  Segments.add(new Segment(0, BOX0 + 0,   0, 1, 5));
-  Segments.add(new Segment(0, BOX0 + 0,  34, 5, 3));
-  Segments.add(new Segment(0, BOX0 + 0,  68, 3, 4));
-  Segments.add(new Segment(0, BOX0 + 0, 102, 4, 1));
+  Edges.add(new Edge(0, BOX0 + 4,  26, 1, 5));
+  Edges.add(new Edge(0, BOX0 + 4,  60, 5, 3));
+  Edges.add(new Edge(0, BOX0 + 4,  96, 3, 4));
+  Edges.add(new Edge(0, BOX0 + 4, 128, 4, 1));
 }
 
