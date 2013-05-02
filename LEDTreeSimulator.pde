@@ -7,6 +7,15 @@ import peasy.org.apache.commons.math.geometry.*;
 import processing.opengl.*;
 import javax.media.opengl.GL;
 
+import toxi.geom.*;
+import toxi.geom.mesh.*;
+
+import toxi.processing.*;
+
+TriangleMesh mesh;
+ToxiclibsSupport gfx;
+
+
 int ledsPerStrip = 32*5;
 int strips = 40;
 int packetLength = strips*ledsPerStrip*3 + 1;
@@ -30,7 +39,7 @@ List<Edge> Edges;
 Fixture tree;
 
 void setup() {
-  size(1200, 1200, OPENGL);
+  size(1024, 768, OPENGL);
 //  size(600, 600, OPENGL);
   colorMode(RGB, 255);
   frameRate(30);
@@ -42,12 +51,14 @@ void setup() {
   pgl.endGL(); //end opengl
 
   //size(1680, 1000, OPENGL);
-  pCamera = new PeasyCam(this, 0, 0, 0, 10);
-  pCamera.setMinimumDistance(1);
+  pCamera = new PeasyCam(this, 0, 1.2, 0, 4);
+  pCamera.setMinimumDistance(2);
   pCamera.setMaximumDistance(10);
-//  pCamera.setSuppressRollRotationMode();
-  pCamera.rotateX(-.1);
-  pCamera.rotateY(.1);
+  pCamera.setWheelScale(.5);
+
+//  pCamera.rotateX(-.1);
+  pCamera.rotateY(1.6);
+//  pCamera.rotateZ(3);
   pCamera.rotateZ(3.14159);
   
   // Fix the front clipping plane
@@ -66,6 +77,9 @@ void setup() {
   defineNodes();
   defineEdges();
   tree = new Fixture(Edges);
+
+  mesh=(TriangleMesh)new STLReader().loadBinary(sketchPath("data/Citizen Extras_Female 03.stl"),STLReader.TRIANGLEMESH);
+  gfx=new ToxiclibsSupport(this);
 
   demoTransmitter = new DemoTransmitter();
   demoTransmitter.start();
@@ -130,14 +144,14 @@ void receive(byte[] data, String ip, int port) {
 color[] currentImage = null;
 
 void draw() {
-  background(0);
+  background(color(0,0,20));
 
   if (currentImage != null) {
     // draw the same tree three times, later we should make 3 trees.
     for(int i = 0; i < 3; i++) {
       pushMatrix();
         rotate(3.14159*2/3*i,0,1,0);
-        translate(-1.5,0,0);
+        translate(-1.52,0,0);
         rotate(-3.14159/6,0,1,0);
         tree.draw(currentImage);
       popMatrix();
@@ -152,5 +166,20 @@ void draw() {
     imageHud.update(newImage);
     currentImage = newImage;
   }
+  
+  // Draw a person for scale
+  pushMatrix();
+    stroke(color(0));
+    fill(color(50,0,50));
+  
+    scale(.011,.011,.011);
+    rotate(-3.14159/2,1,0,0);
+    translate(-100,-80,0);
+    rotate(3.14159/1.5,0,0,1);
+    gfx.mesh(mesh);
+  popMatrix();
+  
+  // Draw the ground
+  drawGround();
 }
 
