@@ -30,7 +30,8 @@ List<Edge> Edges;
 Fixture tree;
 
 void setup() {
-  size(600, 600, OPENGL);
+  size(1200, 1200, OPENGL);
+//  size(600, 600, OPENGL);
   colorMode(RGB, 255);
   frameRate(30);
   
@@ -41,11 +42,13 @@ void setup() {
   pgl.endGL(); //end opengl
 
   //size(1680, 1000, OPENGL);
-  pCamera = new PeasyCam(this, 0, 0, 0, 3);
+  pCamera = new PeasyCam(this, 0, 0, 0, 10);
   pCamera.setMinimumDistance(1);
   pCamera.setMaximumDistance(10);
 //  pCamera.setSuppressRollRotationMode();
-//  pCamera.rotateX(.6);
+  pCamera.rotateX(-.1);
+  pCamera.rotateY(.1);
+  pCamera.rotateZ(3.14159);
   
   // Fix the front clipping plane
   float fov = PI/3.0;
@@ -130,7 +133,15 @@ void draw() {
   background(0);
 
   if (currentImage != null) {
-    tree.draw(currentImage);
+    // draw the same tree three times, later we should make 3 trees.
+    for(int i = 0; i < 3; i++) {
+      pushMatrix();
+        rotate(3.14159*2/3*i,0,1,0);
+        translate(-1.5,0,0);
+        rotate(-3.14159/6,0,1,0);
+        tree.draw(currentImage);
+      popMatrix();
+    }
   }
 
   imageHud.draw();

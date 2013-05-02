@@ -7,6 +7,8 @@ class Edge {
   public int m_startNode;
   public int m_endNode;
   
+  public color m_defaultColor;
+  
   // For LED Tree edges
   // @param name Name of the edge
   // @param strip Strip number (0-7, one for each bb8 output)
@@ -20,6 +22,8 @@ class Edge {
     m_length = 32;  // For simplicity
     m_startNode = startNode;
     m_endNode = endNode;
+    
+    m_defaultColor = color(random(60,255),random(60,255),random(60,255));  //delme
   }
   
   void draw(color[] imageData) {
@@ -31,7 +35,8 @@ class Edge {
       float z = Nodes.get(m_startNode).m_posZ - (Nodes.get(m_startNode).m_posZ - Nodes.get(m_endNode).m_posZ)/m_length*i;
       
       // set the color based on the image data
-      color c = imageData[m_strip + (m_offset + i)*strips];
+      //color c = imageData[m_strip + (m_offset + i)*strips];
+      color c = m_defaultColor;
       
       pushMatrix();
         translate(x, y, z);
