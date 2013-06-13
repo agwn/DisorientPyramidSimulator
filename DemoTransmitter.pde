@@ -21,14 +21,35 @@ class DemoTransmitter extends Thread {
     return imageData;
   }
   
-  DemoTransmitter() {
+  color[] MakeMappingFrame() {
+    int image_size = strips*ledsPerStrip;
+  
+    color[] imageData = new color[image_size];
+  
+    for (int i = 0; i < imageData.length; i++) {
+      imageData[i] = color(0, 0, 0);
+    }
+    
+    for (int i = 0; i < segmentLen; i++) {
+      imageData[segmentX + (segmentY + i)*strips] = color(255,255,255);
+    }
+    
+    animationStep = (animationStep + 1)%3;
+  
+    return imageData;
   }
   
   void run() {
     while(demoMode) {
       try {
         if (newImageQueue.size() < 1) {
-          color imageData[] = MakeDemoFrame();
+          color imageData[];
+          if (mappingMode) {
+            imageData = MakeMappingFrame();
+          }
+          else {
+            imageData = MakeDemoFrame();
+          }
           newImageQueue.put(imageData);
         }
         Thread.sleep(0);

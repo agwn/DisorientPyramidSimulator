@@ -1,5 +1,6 @@
 import hypermedia.net.*;
 import java.util.concurrent.*;
+import java.util.*;
 
 import peasy.org.apache.commons.math.*;
 import peasy.*;
@@ -38,17 +39,28 @@ List<Node> Nodes;
 List<Edge> Edges;
 Fixture tree;
 
+Boolean mappingMode = false;
+int segmentX = 0;
+int segmentY = 0;
+int segmentLen = 32;
+
 void setup() {
-  size(1024, 768, OPENGL);
-//  size(600, 600, OPENGL);
+//  size(1680, 1050, OPENGL);
+  size(640, 480, OPENGL);
   colorMode(RGB, 255);
-  frameRate(30);
+  frameRate(60);
   
   // Turn on vsync to prevent tearing
-  PGraphicsOpenGL pgl = (PGraphicsOpenGL) g; //processing graphics object
-  GL gl = pgl.beginGL(); //begin opengl
+//// For Processing 1.5.1
+//  PGraphicsOpenGL pgl = (PGraphicsOpenGL) g; //processing graphics object
+//  GL gl = pgl.beginGL(); //begin opengl
+//  gl.setSwapInterval(2); //set vertical sync on
+//  pgl.endGL(); //end opengl
+
+//// For Processing 2.0
+  GL gl = g.beginPGL().gl;
   gl.setSwapInterval(2); //set vertical sync on
-  pgl.endGL(); //end opengl
+  g.endPGL();
 
   //size(1680, 1000, OPENGL);
   pCamera = new PeasyCam(this, 0, 1.2, 0, 4);
@@ -71,14 +83,14 @@ void setup() {
 
   imageHud = new ImageHud(20, height-160-20, strips, ledsPerStrip);
 
-  udp = new UDP( this, 58082 );
+  udp = new UDP( this, 58083 );
   udp.listen( true );
 
   defineNodes();
   defineEdges();
   tree = new Fixture(Edges);
 
-  mesh=(TriangleMesh)new STLReader().loadBinary(sketchPath("data/Citizen Extras_Female 03.stl"),STLReader.TRIANGLEMESH);
+  mesh=(TriangleMesh)new STLReader().loadBinary(sketchPath("data/Citizen Extras_Female 03_low.stl"),STLReader.TRIANGLEMESH);
   gfx=new ToxiclibsSupport(this);
 
   demoTransmitter = new DemoTransmitter();
@@ -143,29 +155,14 @@ void receive(byte[] data, String ip, int port) {
 
 color[] currentImage = null;
 
+float rot = 0;
+
 void draw() {
+  // Rotate slowly
+//  pCamera.setRotations(0,rot+=.011,3.14159);
+
+  
   background(color(0,0,20));
-
-  if (currentImage != null) {
-    // draw the same tree three times, later we should make 3 trees.
-    for(int i = 0; i < 3; i++) {
-      pushMatrix();
-        rotate(3.14159*2/3*i,0,1,0);
-        translate(-1.52,0,0);
-        rotate(-3.14159/6,0,1,0);
-        tree.draw(currentImage);
-      popMatrix();
-    }
-  }
-
-  imageHud.draw();
-
-  if (newImageQueue.size() > 0) {
-    color[] newImage = (color[])newImageQueue.remove();
-
-    imageHud.update(newImage);
-    currentImage = newImage;
-  }
   
   // Draw a person for scale
   pushMatrix();
@@ -181,5 +178,29 @@ void draw() {
   
   // Draw the ground
   drawGround();
+    
+  if (currentImage != null) {
+    // draw the same tree three times, later we should make 3 trees.
+//    for(int i = 0; i < 3; i++) {
+    int i = 0;
+      pushMatrix();
+        rotate(3.14159*2/3*i,0,1,0);
+        translate(-1.52,0,0);
+        rotate(-3.14159/6,0,1,0);
+        tree.draw(currentImage);
+      popMatrix();
+//    }
+  }
+
+  imageHud.draw();
+
+  if (newImageQueue.size() > 0) {
+    color[] newImage = (color[])newImageQueue.remove();
+
+    imageHud.update(newImage);
+    currentImage = newImage;
+  }
 }
+
+
 
