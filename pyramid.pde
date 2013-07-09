@@ -31,8 +31,8 @@ void drawPyramid() {
         translate(-C, 0, 0);
         beginShape();
         vertex(0, -(i), -D);
-        vertex(B, -(i), -D);
-        vertex(B, -(i), D);
+        vertex(C, -(i), -D);
+        vertex(C, -(i), D);
         vertex(0, -(i), D);
         endShape();
       } 
@@ -47,8 +47,8 @@ void drawPyramid() {
         translate(-(D), 0, 0);
         beginShape();
         vertex(0, -(i), -D);
-        vertex(D, -(i), -D);
-        vertex(D, -(i), D);
+        vertex(C, -(i), -D);
+        vertex(C, -(i), D);
         vertex(0, -(i), D);
         endShape();
       }
