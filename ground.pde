@@ -13,10 +13,10 @@ void drawGround() {
       translate(bound/tilefactor*x-bound/2, 0, bound/tilefactor*y-bound/2);
       
       beginShape();
-      vertex(0,                .5, 0               );
-      vertex(bound/tilefactor, .5, 0               );
-      vertex(bound/tilefactor, .5, bound/tilefactor);
-      vertex(0,                .5, bound/tilefactor);
+      vertex(0,                .55, 0               );
+      vertex(bound/tilefactor, .55, 0               );
+      vertex(bound/tilefactor, .55, bound/tilefactor);
+      vertex(0,                .55, bound/tilefactor);
       endShape();
       popMatrix();
     }

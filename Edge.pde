@@ -19,7 +19,7 @@ class Edge {
     m_name = name;
     m_strip = strip;
     m_offset = offset;
-    m_length = 31;  // For simplicity
+    m_length = 30;  // For simplicity
     m_startNode = startNode;
     m_endNode = endNode;
     
@@ -36,7 +36,7 @@ class Edge {
       
       // set the color based on the image data
       color c = imageData[m_strip + (m_offset + i)*strips];
-//      color c = color(255*(m_length-i)/(float)m_length);
+      //color c = m_defaultColor;
       
       // Draw the individual LEDs
       pushMatrix();
