@@ -2,8 +2,8 @@ void drawGround() {
   stroke(92, 51);
   fill(92, 51);
   
-  int tilefactor = 20;
-  float bound = 20;
+  int tilefactor = 50;
+  float bound = 50;
 
   for (int x = 0; x < tilefactor; x++) {
     for (int y = 0; y < tilefactor; y++) {

@@ -1,8 +1,4 @@
-//// Share this between the transmitter and simulator.
-//float A = 0.25;
-//float B = 1;
-//float C = 1.5;
-//float D = 1.5;
+// Share this between the transmitter and simulator.
 
 // naming scheme 0xABCD A=box B=strip
 void defineNodes() {
@@ -14,7 +10,7 @@ void defineNodes() {
   for (int i=0; i<4; i++) {
     for (int j=0; j<4; j++) {
       for (int k=0; k<(5-i); k++) {
-        Nodes.add(new Node(nodeCnt, i*(B+C)+j*A, -k*B, 0));
+        Nodes.add(new Node(nodeCnt, i*(pWidth+pSpacing)+j*sSpacing, -k*pHeight, 0));
         nodeCnt++;
       }
     }
@@ -22,7 +18,6 @@ void defineNodes() {
 
   println(Nodes.size());
 }
-
 
 
 void defineEdges() {

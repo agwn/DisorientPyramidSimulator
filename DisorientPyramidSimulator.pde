@@ -12,14 +12,16 @@ import toxi.geom.mesh.*;
 
 import toxi.processing.*;
 
-TriangleMesh mesh;
-ToxiclibsSupport gfx;
+//TriangleMesh mesh;
+//ToxiclibsSupport gfx;
 
 //// Share this between the transmitter and simulator.
-float A = 0.25;  // padding
-float B = 1;  // panel width
-float C = .5;  // spacing
-float D = 1.5;
+float pWidth = 3;  // panel width
+float pHeight = 3;  // panel step height
+float sSpacing = pWidth/4;
+float sPadding = sSpacing/2;  // padding
+float pSpacing = 2;  // spacing
+float cWidth = 4;
 
 int ledsPerStrip = 30*4;
 int strips = 16;
@@ -59,16 +61,13 @@ void setup() {
 
   //size(1680, 1000, OPENGL);
   pCamera = new PeasyCam(this, 0, 0, 0, 5);
-  pCamera.setMinimumDistance(12);
-  pCamera.setMaximumDistance(20);
-  pCamera.setWheelScale(.5);
+  pCamera.setMinimumDistance(30);
+  pCamera.setMaximumDistance(50);
+  pCamera.setWheelScale(1);
 
-  pCamera.rotateY(PI/4);
-  pCamera.rotateX(PI/16);
   //pCamera.rotateZ(-PI/4);
-  //pCamera.rotateX(-(3.14159/2.1));
-  //  pCamera.rotateY(1.6);
-  //  pCamera.rotateZ(3.14159);
+  pCamera.rotateY(PI/4);
+  pCamera.rotateX(PI/32);
 
   // Fix the front clipping plane
   float fov = PI/3.0;
@@ -88,7 +87,7 @@ void setup() {
 
   Panel = new Fixture(Edges);
 
-  //mesh=(TriangleMesh)new STLReader().loadBinary(sketchPath("data/Citizen Extras_Female 03.stl"),STLReader.TRIANGLEMESH);
+  //mesh=(TriangleMesh)new STLReader().loadBinary(sketchPath("data/Citizen Extras_Female 03.stl"), STLReader.TRIANGLEMESH);
   //gfx=new ToxiclibsSupport(this);
 
   demoTransmitter = new DemoTransmitter();
@@ -154,40 +153,42 @@ void receive(byte[] data, String ip, int port) {
 color[] currentImage = null;
 
 void draw() {
-  
+
   background(color(0, 0, 20));
 
   // Draw the ground
   drawGround();
-  
+
   // Draw the pyramid
   drawPyramid();
 
+  
   if (currentImage != null) {
-    // draw the same panel 4 time for mock up.
-    pushMatrix();
-    translate(D+.125,0,D);
-    Panel.draw(currentImage);
-    popMatrix();
-
-    pushMatrix();
-    translate(D,0,D+.125);
-    rotateY(-PI/2);
-    Panel.draw(currentImage);
-    popMatrix();
-
-    pushMatrix();
-    translate(-(D+.125),0,D);
-    rotateY(-PI);
-    Panel.draw(currentImage);
-    popMatrix();
-
-    pushMatrix();
-    translate(D,0,-(D+.125));
-    rotateY(PI/2);
-    Panel.draw(currentImage);
-    popMatrix();
-  }
+   // draw the same panel 4 time for mock up.
+   pushMatrix();
+   translate(cWidth+sPadding, 0, cWidth+0.05);
+   Panel.draw(currentImage);
+   popMatrix();
+   
+   pushMatrix();
+   translate(cWidth+0.05, 0, cWidth+sPadding);
+   rotateY(-PI/2);
+   Panel.draw(currentImage);
+   popMatrix();
+   
+   pushMatrix();
+   translate(-(cWidth+sPadding), 0, cWidth+0.05);
+   rotateY(-PI);
+   Panel.draw(currentImage);
+   popMatrix();
+   
+   pushMatrix();
+   translate(cWidth+0.05, 0, -(cWidth+sPadding));
+   rotateY(PI/2);
+   Panel.draw(currentImage);
+   popMatrix();
+   }
+   
 
   imageHud.draw();
 
@@ -199,17 +200,17 @@ void draw() {
   }
 
   // Draw a person for scale
-  //  pushMatrix();
-  //    stroke(color(0));
-  //    fill(color(50,0,50));
-  //  
-  //    scale(.011,.011,.011);
-  //    rotate(-3.14159/2,1,0,0);
-  //    translate(-100,-80,0);
-  //    rotate(3.14159/1.5,0,0,1);
-  //    gfx.mesh(mesh);
-  //  popMatrix();
-
-
+  /*
+  pushMatrix();
+   stroke(color(0));
+   fill(color(50, 0, 50));
+   
+   scale(.011, .011, .011);
+   rotate(-3.14159/2, 1, 0, 0);
+   translate(-100, -80, 0);
+   rotate(3.14159/1.5, 0, 0, 1);
+   gfx.mesh(mesh);
+   popMatrix();
+   */
 }
 
