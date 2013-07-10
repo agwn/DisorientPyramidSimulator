@@ -1,31 +1,36 @@
 class DemoTransmitter extends Thread {
-  
+
   int animationStep = 0;
-  
+  final int spacing = 30; 
+
   color[] MakeDemoFrame() {
     int image_size = strips*ledsPerStrip;
-  
+
     color[] imageData = new color[image_size];
-  
-    for (int i = 0; i < imageData.length; i++) {
-      if (animationStep == i%3) {
-        imageData[i] = color(0, 0, 255);
-      }
-      else {
-        imageData[i] = color(0, 0, 0);
+
+    for (int i = 0; i < strips; i++) {
+      for (int j=0; j < ledsPerStrip; j++) {
+        int loc = j*strips+i;
+
+        if (animationStep == (j%spacing)) {
+          imageData[loc] = color(0, 0, 255);
+        }
+        else {
+          imageData[loc] = color(0, 0, 0);
+        }
       }
     }
-    
-    animationStep = (animationStep + 1)%3;
-  
+
+    animationStep = (animationStep + 1)%spacing;
+
     return imageData;
   }
-  
+
   DemoTransmitter() {
   }
-  
+
   void run() {
-    while(demoMode) {
+    while (demoMode) {
       try {
         if (newImageQueue.size() < 1) {
           color imageData[] = MakeDemoFrame();
@@ -39,3 +44,4 @@ class DemoTransmitter extends Thread {
     }
   }
 }
+

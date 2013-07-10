@@ -16,14 +16,20 @@ import toxi.processing.*;
 //ToxiclibsSupport gfx;
 
 //// Share this between the transmitter and simulator.
+int panelCnt = 4;
+int panelMaxHeight = 4;
 int stripsPerPanel = 8;
-float pWidth = 3;  // panel width
-float pHeight = 3;  // panel step height
+int ledsPerMeter = 30;
+float pWidth = 3.0;  // panel width
+float pHeight = 3.0;  // panel step height
 float sSpacing = pWidth/float(stripsPerPanel);
 float sPadding = sSpacing/2.0;  // padding
-float pSpacing = 2;  // spacing
-float cWidth = 4;
+float pSpacing = 2.0;  // spacing
+float cWidth = 4.0;
 
+//int ledsTotal = (30*4 + 30*3 + 30*2 + 30)*8;
+//int ledsPerStrip = ledsTotal/(panelCnt*stripsPerPanel);
+//int strips = panelCnt*stripsPerPanel;
 int ledsPerStrip = 30*4;
 int strips = 32;
 int packetLength = strips*ledsPerStrip*3 + 1;
@@ -62,9 +68,9 @@ void setup() {
 
   //size(1680, 1000, OPENGL);
   pCamera = new PeasyCam(this, 0, 0, 0, 5);
-  pCamera.setMinimumDistance(25);
+  pCamera.setMinimumDistance(10);
   pCamera.setMaximumDistance(50);
-  pCamera.setWheelScale(1);
+  pCamera.setWheelScale(0.25);
 
   //pCamera.rotateZ(-PI/4);
   pCamera.rotateY(PI/4);
@@ -122,7 +128,7 @@ void receive(byte[] data, String ip, int port) {
   }
 
   if (data[0] != 1) {
-    println("Packet eader mismatch. Expected 1, got " + data[0]);
+    println("Packet header mismatch. Expected 1, got " + data[0]);
     return;
   }
 
@@ -138,10 +144,12 @@ void receive(byte[] data, String ip, int port) {
 
   color[] newImage = new color[strips*ledsPerStrip];
 
-  for (int i=0; i< strips*ledsPerStrip; i++) {
-    // Processing doesn't like it when you call the color function while in an event
-    // go figure
-    newImage[i] = (int)(0xff<<24 | convertByte(data[i*3 + 1])<<16) | (convertByte(data[i*3 + 2])<<8) | (convertByte(data[i*3 + 3]));
+  for (int i=0; i<strips; i++) {
+    for (int j=0; j<ledsPerStrip; j++) {
+      int loc = j*strips+i;
+      // Processing doesn't like it when you call the color function while in an event go figure
+      newImage[loc] = (int)(0xff<<24 | convertByte(data[loc*3 + 1])<<16) | (convertByte(data[loc*3 + 2])<<8) | (convertByte(data[loc*3 + 3]));
+    }
   }
   try { 
     newImageQueue.put(newImage);
@@ -163,33 +171,32 @@ void draw() {
   // Draw the pyramid
   drawPyramid();
 
-  
+
   if (currentImage != null) {
-   // draw the same panel 4 time for mock up.
-   pushMatrix();
-   translate(cWidth+sPadding, 0, cWidth+0.05);
-   Panel.draw(currentImage);
-   popMatrix();
-   
-   pushMatrix();
-   translate(cWidth+0.05, 0, cWidth+sPadding);
-   rotateY(-PI/2);
-   Panel.draw(currentImage);
-   popMatrix();
-/*   
-   pushMatrix();
-   translate(-(cWidth+sPadding), 0, cWidth+0.05);
-   rotateY(-PI);
-   Panel.draw(currentImage);
-   popMatrix();
-   
-   pushMatrix();
-   translate(cWidth+0.05, 0, -(cWidth+sPadding));
-   rotateY(PI/2);
-   Panel.draw(currentImage);
-   popMatrix();
-   */
-   } 
+    // draw the same panel 4 times for mock up.
+    pushMatrix();
+    translate(cWidth+sPadding, 0, cWidth+0.05);
+    Panel.draw(currentImage);
+    popMatrix();
+
+    pushMatrix();
+    translate(cWidth+0.05, 0, cWidth+sPadding);
+    rotateY(-PI/2);
+    Panel.draw(currentImage);
+    popMatrix();
+
+    pushMatrix();
+    translate(-(cWidth+sPadding), 0, cWidth+0.05);
+    rotateY(-PI);
+    Panel.draw(currentImage);
+    popMatrix();
+
+    pushMatrix();
+    translate(cWidth+0.05, 0, -(cWidth+sPadding));
+    rotateY(PI/2);
+    Panel.draw(currentImage);
+    popMatrix();
+  } 
 
   imageHud.draw();
 
