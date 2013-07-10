@@ -16,15 +16,16 @@ import toxi.processing.*;
 //ToxiclibsSupport gfx;
 
 //// Share this between the transmitter and simulator.
+int stripsPerPanel = 8;
 float pWidth = 3;  // panel width
 float pHeight = 3;  // panel step height
-float sSpacing = pWidth/4;
-float sPadding = sSpacing/2;  // padding
+float sSpacing = pWidth/float(stripsPerPanel);
+float sPadding = sSpacing/2.0;  // padding
 float pSpacing = 2;  // spacing
 float cWidth = 4;
 
 int ledsPerStrip = 30*4;
-int strips = 16;
+int strips = 32;
 int packetLength = strips*ledsPerStrip*3 + 1;
 
 Boolean demoMode = true;
@@ -61,7 +62,7 @@ void setup() {
 
   //size(1680, 1000, OPENGL);
   pCamera = new PeasyCam(this, 0, 0, 0, 5);
-  pCamera.setMinimumDistance(30);
+  pCamera.setMinimumDistance(25);
   pCamera.setMaximumDistance(50);
   pCamera.setWheelScale(1);
 
@@ -175,7 +176,7 @@ void draw() {
    rotateY(-PI/2);
    Panel.draw(currentImage);
    popMatrix();
-   
+/*   
    pushMatrix();
    translate(-(cWidth+sPadding), 0, cWidth+0.05);
    rotateY(-PI);
@@ -187,8 +188,8 @@ void draw() {
    rotateY(PI/2);
    Panel.draw(currentImage);
    popMatrix();
-   }
-   
+   */
+   } 
 
   imageHud.draw();
 

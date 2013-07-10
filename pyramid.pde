@@ -20,7 +20,7 @@ void drawPyramid() {
       popMatrix();
 
       pushMatrix();
-      if (i < 4) {
+      if (i < 2 /*4*/) {
         translate((4-i)*(pWidth+pSpacing), 0, 0);
         beginShape();
         vertex(0, -(i-.75)*pHeight, -cWidth);

@@ -8,7 +8,7 @@ void defineNodes() {
   
   // nodes for left panel
   for (int i=0; i<4; i++) {
-    for (int j=0; j<4; j++) {
+    for (int j=0; j<stripsPerPanel; j++) {
       for (int k=0; k<(5-i); k++) {
         Nodes.add(new Node(nodeCnt, i*(pWidth+pSpacing)+j*sSpacing, -k*pHeight, 0));
         nodeCnt++;
@@ -26,7 +26,7 @@ void defineEdges() {
   int nodeCnt = 0;
   // left edges
   for (int i=0; i<4; i++) {
-    for (int j=0; j<4; j++) {
+    for (int j=0; j<stripsPerPanel; j++) {
       for (int k=0; k<(5-i); k++) {
         if (k<(4-i)) {
           int nodeID = nodeCnt;
