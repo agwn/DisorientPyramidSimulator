@@ -15,6 +15,8 @@ import toxi.processing.*;
 //TriangleMesh mesh;
 //ToxiclibsSupport gfx;
 
+int FRAMERATE = 15;
+
 //// Share this between the transmitter and simulator.
 int panelCnt = 4;
 int panelMaxHeight = 4;
@@ -55,10 +57,10 @@ List<Edge> Edges;
 Fixture Panel;
 
 void setup() {
-  size(1200, 600, OPENGL);
-  //size(720, 600, OPENGL);
+  //size(1200, 600, OPENGL);
+  size(1000, 500, OPENGL);
   colorMode(RGB, 255);
-  frameRate(30);
+  frameRate(FRAMERATE);
 
   // Turn on vsync to prevent tearing
   PGraphicsOpenGL pgl = (PGraphicsOpenGL) g; //processing graphics object
@@ -67,20 +69,20 @@ void setup() {
   pgl.endGL(); //end opengl
 
   //size(1680, 1000, OPENGL);
-  pCamera = new PeasyCam(this, 0, 0, 0, 5);
-  pCamera.setMinimumDistance(10);
-  pCamera.setMaximumDistance(50);
+  pCamera = new PeasyCam(this, 0, -0.25, 0, 30);
+  pCamera.setMinimumDistance(20);
+  pCamera.setMaximumDistance(70);
   pCamera.setWheelScale(0.25);
+  pCamera.setYawRotationMode();
 
   //pCamera.rotateZ(-PI/4);
   pCamera.rotateY(PI/4);
-  pCamera.rotateX(PI/32);
+  //pCamera.rotateX(PI/32);
 
   // Fix the front clipping plane
   float fov = PI/3.0;
   float cameraZ = (height/2.0) / tan(fov/2.0);
-  perspective(fov, float(width)/float(height), 
-  cameraZ/1000.0, cameraZ*10.0);
+  perspective(fov, float(width)/float(height), cameraZ/100.0, cameraZ*10.0);
 
   newImageQueue = new ArrayBlockingQueue(2);
 
