@@ -1,7 +1,7 @@
 class DemoTransmitter extends Thread {
 
   int animationStep = 0;
-  final int spacing = 30; 
+  final int spacing = 8; 
 
   color[] MakeDemoFrame() {
     int image_size = strips*ledsPerStrip;
