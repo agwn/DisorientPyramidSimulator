@@ -7,15 +7,15 @@ import peasy.org.apache.commons.math.geometry.*;
 import processing.opengl.*;
 import javax.media.opengl.GL;
 
-import toxi.geom.*;
-import toxi.geom.mesh.*;
+//import toxi.geom.*;
+//import toxi.geom.mesh.*;
 
-import toxi.processing.*;
+//import toxi.processing.*;
 
 //TriangleMesh mesh;
 //ToxiclibsSupport gfx;
 
-int FRAMERATE = 15;
+int FRAMERATE = 5;//15;
 
 //// Share this between the transmitter and simulator.
 int panelCnt = 4;
@@ -29,12 +29,11 @@ float sPadding = sSpacing/2.0;  // padding
 float pSpacing = 2.0;  // spacing
 float cWidth = 4.0;
 
-//int ledsTotal = (30*4 + 30*3 + 30*2 + 30)*8;
-//int ledsPerStrip = ledsTotal/(panelCnt*stripsPerPanel);
-//int strips = panelCnt*stripsPerPanel;
-int ledsPerStrip = 30*4;
-int strips = 32;
-int packetLength = strips*ledsPerStrip*3 + 1;
+int ledsPerStrip = panelMaxHeight*ledsPerMeter;
+int strips = panelCnt*stripsPerPanel;
+int faces = 2;
+int ledsTotal = panelCnt*stripsPerPanel*panelMaxHeight*ledsPerMeter;
+int packetLength = faces*ledsTotal*3 + 1;
 
 Boolean demoMode = true;
 BlockingQueue newImageQueue;
@@ -48,13 +47,15 @@ DemoTransmitter demoTransmitter;
 int animationStep = 0;
 int maxConvertedByte = 0;
 
-int BOX0=0;
-int BOX1=8;
+int BOX0=0;  // right panel
+int BOX1=8;  // left panel
 
 List<Node> Nodes;
-List<Edge> Edges;
+List<Edge> rEdges;
+List<Edge> lEdges;
 
-Fixture Panel;
+Fixture rPanel;
+Fixture lPanel;
 
 void setup() {
   //size(1200, 600, OPENGL);
@@ -86,7 +87,7 @@ void setup() {
 
   newImageQueue = new ArrayBlockingQueue(2);
 
-  imageHud = new ImageHud(20, height-160-20, strips, ledsPerStrip);
+  imageHud = new ImageHud(20, height-ledsPerStrip-20, faces*strips, ledsPerStrip);
 
   udp = new UDP( this, 58082 );
   udp.listen( true );
@@ -94,7 +95,8 @@ void setup() {
   defineNodes();
   defineEdges();
 
-  Panel = new Fixture(Edges);
+  rPanel = new Fixture(rEdges);
+  lPanel = new Fixture(lEdges);
 
   //mesh=(TriangleMesh)new STLReader().loadBinary(sketchPath("data/Citizen Extras_Female 03.stl"), STLReader.TRIANGLEMESH);
   //gfx=new ToxiclibsSupport(this);
@@ -144,11 +146,10 @@ void receive(byte[] data, String ip, int port) {
     return;
   }
 
-  color[] newImage = new color[strips*ledsPerStrip];
-
-  for (int i=0; i<strips; i++) {
+  color[] newImage = new color[faces*strips*ledsPerStrip];
+  for (int i=0; i<faces*strips; i++) {
     for (int j=0; j<ledsPerStrip; j++) {
-      int loc = j*strips+i;
+      int loc = j*(faces*strips) +i;
       // Processing doesn't like it when you call the color function while in an event go figure
       newImage[loc] = (int)(0xff<<24 | convertByte(data[loc*3 + 1])<<16) | (convertByte(data[loc*3 + 2])<<8) | (convertByte(data[loc*3 + 3]));
     }
@@ -168,35 +169,38 @@ void draw() {
   background(color(0, 0, 20));
 
   // Draw the ground
-  drawGround();
+  //drawGround();
 
   // Draw the pyramid
   drawPyramid();
 
 
   if (currentImage != null) {
-    // draw the same panel 4 times for mock up.
+    // Draw the front right panel
     pushMatrix();
     translate(cWidth+sPadding, 0, cWidth+0.05);
-    Panel.draw(currentImage);
+    rPanel.draw(currentImage, strips);
     popMatrix();
 
+    // Draw the front left panel
     pushMatrix();
     translate(cWidth+0.05, 0, cWidth+sPadding);
     rotateY(-PI/2);
-    Panel.draw(currentImage);
+    lPanel.draw(currentImage, 0);
     popMatrix();
 
-    pushMatrix();
-    translate(-(cWidth+sPadding), 0, cWidth+0.05);
-    rotateY(-PI);
-    Panel.draw(currentImage);
-    popMatrix();
-
+    // Draw the back right panel
     pushMatrix();
     translate(cWidth+0.05, 0, -(cWidth+sPadding));
     rotateY(PI/2);
-    Panel.draw(currentImage);
+    rPanel.draw(currentImage, strips);
+    popMatrix();
+
+    // Draw the back left panel
+    pushMatrix();
+    translate(-(cWidth+sPadding), 0, cWidth+0.05);
+    rotateY(-PI);
+    lPanel.draw(currentImage, 0);
     popMatrix();
   } 
 

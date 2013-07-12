@@ -29,7 +29,7 @@ class Edge {
     m_defaultColor = color(random(60, 255), random(60, 255), random(60, 255));  //delme
   }
 
-  void draw(color[] imageData) {
+  void draw(color[] imageData, int offset) {
     if (m_visible) {
       for (int i = 0; i < m_length; i++) { 
 
@@ -39,7 +39,7 @@ class Edge {
         float z = Nodes.get(m_startNode).m_posZ - (Nodes.get(m_startNode).m_posZ - Nodes.get(m_endNode).m_posZ)/m_length*i;
 
         // set the color based on the image data
-        color c = imageData[m_strip + (m_offset + i)*strips];
+        color c = imageData[offset+(m_strip + (m_offset + i)*(faces*strips))];
         //color c = m_defaultColor;
 
         // Draw the individual LEDs

@@ -1,16 +1,15 @@
 class DemoTransmitter extends Thread {
 
   int animationStep = 0;
-  final int spacing = 8; 
+  final int spacing = 10; 
 
   color[] MakeDemoFrame() {
-    int image_size = strips*ledsPerStrip;
+    int image_size = faces*strips*ledsPerStrip;
 
     color[] imageData = new color[image_size];
-
-    for (int i = 0; i < strips; i++) {
+    for (int i = 0; i < faces*strips; i++) {
       for (int j=0; j < ledsPerStrip; j++) {
-        int loc = j*strips+i;
+        int loc = j*(faces*strips) +i;
 
         if (animationStep == (j%spacing)) {
           imageData[loc] = color(0, 0, 255);

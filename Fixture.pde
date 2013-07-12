@@ -6,9 +6,9 @@ class Fixture {
     m_edges = edges;
   }
   
-  void draw(color[] imageData) {
+  void draw(color[] imageData, int offset) {
     for (Edge edge : m_edges) { 
-      edge.draw(imageData);
+      edge.draw(imageData, offset);
     }
   }
 }
