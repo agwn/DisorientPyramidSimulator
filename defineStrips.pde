@@ -15,7 +15,8 @@ void defineNodes() {
           nodeCnt++;
         }
         else {
-          Nodes.add(new Node(nodeCnt, j*sSpacing, -(k*pHeight), 0));
+          Nodes.add(new Node(nodeCnt, pWidth+j*sSpacing, -(k*pHeight), 0));
+          //Nodes.add(new Node(nodeCnt, j*sSpacing, -(k*pHeight), 0));
           nodeCnt++;
         }
       }

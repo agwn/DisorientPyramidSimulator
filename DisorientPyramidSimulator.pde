@@ -31,7 +31,7 @@ int panelHeights[] = {
 };
 //float pHeight = 3.0;  // panel step height
 float pHeights[] = {
-  21, 14, 14, 7, 3
+  21, 21, 14, 7, 3
 };
 float pSpacing = 3.0;  // spacing
 float pSpaces[] = {
