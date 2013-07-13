@@ -1,77 +1,85 @@
+
 void drawPyramid() {
   stroke(0);
-  fill(32);
+  fill(64);
 
-  for (int i=4; i>0; i--) {
-    for (int j=0; j<4; j++) {
+  pushMatrix();
+  rotateY(PI/2);
+  beginShape();
+  vertex(-cWidth, -pHeights[0], -cWidth);
+  vertex(cWidth, -pHeights[0], -cWidth);
+  vertex(cWidth, -pHeights[0], cWidth);
+  vertex(-cWidth, -pHeights[0], cWidth);
+  endShape();
+  beginShape();
+  vertex(-cWidth, -pHeights[1], -cWidth);
+  vertex(cWidth, -pHeights[1], -cWidth);
+  vertex(cWidth, -pHeights[1], cWidth);
+  vertex(-cWidth, -pHeights[1], cWidth);
+  endShape();
+  popMatrix();
+
+  for (int j=0; j<4; j++) {  // quadrant
+    for (int i=0; i<(panelCnt+1); i++) {
       pushMatrix();
       rotateY(PI/2*j);
       translate(cWidth, 0, 0);
 
-      pushMatrix();
-      translate(((4-i)*(pWidth+pSpacing)), 0, cWidth-.05);
       // draw side panel
+      pushMatrix();
+      if (0 == i) {
+        translate(0, 0, cWidth-.05);
+      } 
+      else {
+        translate(i*pWidth+(i-1)*pSpacing, 0, cWidth-.05);
+      }
       beginShape();
       vertex(0, 0, 0);
       vertex(pWidth, 0, 0);
-      vertex(pWidth, -i*pHeight, 0);
-      vertex(0, -i*pHeight, 0);
+      vertex(pWidth, -pHeights[i], 0);
+      vertex(0, -pHeights[i], 0);
       endShape();
       popMatrix();
 
+      // draw right panel
       pushMatrix();
-      if (i < 4) {
-        translate((4-i)*(pWidth+pSpacing), 0, 0);
-        beginShape();
-        vertex(0, -(i-.75)*pHeight, -cWidth);
-        vertex(pWidth, -(i-.75)*pHeight, -cWidth);
-        vertex(pWidth, -(i-.75)*pHeight, cWidth);
-        vertex(0, -(i-.75)*pHeight, cWidth);
-        endShape();
-
-        translate(-pSpacing, 0, 0);
-        beginShape();
-        vertex(0, -(i)*pHeight, -cWidth);
-        vertex(pSpacing, -(i)*pHeight, -cWidth);
-        vertex(pSpacing, -(i)*pHeight, cWidth);
-        vertex(0, -(i)*pHeight, cWidth);
-        endShape();
-
-        beginShape();
-        vertex(pSpacing, -(i)*pHeight, -cWidth);
-        vertex(pSpacing, -(i-.75)*pHeight, -cWidth);
-        vertex(pSpacing, -(i-.75)*pHeight, cWidth);
-        vertex(pSpacing, -(i)*pHeight, cWidth);
-        endShape();
+      if (0 == i) {
+        translate(0, 0, -(cWidth-.05));
       } 
       else {
-        translate((4-i)*(pWidth+pSpacing), 0, 0);
-        beginShape();
-        vertex(0, -(i)*pHeight, -cWidth);
-        vertex(pWidth, -(i)*pHeight, -cWidth);
-        vertex(pWidth, -(i)*pHeight, cWidth);
-        vertex(0, -(i)*pHeight, cWidth);
-        endShape();
-        translate(-(cWidth), 0, 0);
+        translate(i*pWidth+(i-1)*pSpacing, 0, -(cWidth-.05));
+      }
+      beginShape();
+      vertex(0, 0, 0);
+      vertex(pWidth, 0, 0);
+      vertex(pWidth, -pHeights[i], 0);
+      vertex(0, -pHeights[i], 0);
+      endShape();
+      popMatrix();
 
+      // draw center
+      pushMatrix();
+      if (i>0) {
+        translate(i*pWidth+(i-1)*pSpacing, 0, 0);
+      }
+      beginShape();
+      vertex(0, -fHeights[i], -cWidth);
+      vertex(pWidth, -fHeights[i], -cWidth);
+      vertex(pWidth, -fHeights[i], cWidth);
+      vertex(0, -fHeights[i], cWidth);
+      endShape();
+
+      if (i>0) {
+        translate(-pSpacing, 0, 0);
         beginShape();
-        vertex(0, -(i)*pHeight, -cWidth);
-        vertex(cWidth, -(i)*pHeight, -cWidth);
-        vertex(cWidth, -(i)*pHeight, cWidth);
-        vertex(0, -(i)*pHeight, cWidth);
+        vertex(0, -pHeights[i], -cWidth);
+        vertex(pSpacing, -pHeights[i], -cWidth);
+        vertex(pSpacing, -pHeights[i], cWidth);
+        vertex(0, -pHeights[i], cWidth);
         endShape();
       }
       popMatrix();
 
-      pushMatrix();
-      translate((4-i)*(pWidth+pSpacing), 0, -(cWidth-.05));
-      beginShape();
-      vertex(0, 0, 0);
-      vertex(pWidth, 0, 0);
-      vertex(pWidth, -i*pHeight, 0);
-      vertex(0, -i*pHeight, 0);
-      endShape();
-      popMatrix();
       popMatrix();
     }
   }

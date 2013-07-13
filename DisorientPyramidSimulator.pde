@@ -18,21 +18,36 @@ import javax.media.opengl.GL;
 int FRAMERATE = 5;//15;
 
 //// Share this between the transmitter and simulator.
-int panelCnt = 4;
-int panelMaxHeight = 4;
 int stripsPerPanel = 8;
 int ledsPerMeter = 30;
+
 float pWidth = 3.0;  // panel width
-float pHeight = 3.0;  // panel step height
+float cWidth = 6.0;
+
+int panelCnt = 4;
+int maxPanelCnt = 7;
+int panelHeights[] = {
+  maxPanelCnt, 5, 3, 1
+};
+//float pHeight = 3.0;  // panel step height
+float pHeights[] = {
+  21, 14, 14, 7, 3
+};
+float pSpacing = 3.0;  // spacing
+float pSpaces[] = {
+  0, pSpacing, pSpacing, pSpacing, pSpacing
+};
+float pHeight = 3.0;
+float fHeights[] = {
+  14, 14, 10.5, 5, 0.5
+};
 float sSpacing = pWidth/float(stripsPerPanel);
 float sPadding = sSpacing/2.0;  // padding
-float pSpacing = 2.0;  // spacing
-float cWidth = 4.0;
 
-int ledsPerStrip = panelMaxHeight*ledsPerMeter;
+int ledsPerStrip = maxPanelCnt*ledsPerMeter;
 int strips = panelCnt*stripsPerPanel;
 int faces = 2;
-int ledsTotal = panelCnt*stripsPerPanel*panelMaxHeight*ledsPerMeter;
+int ledsTotal = panelCnt*stripsPerPanel*maxPanelCnt*ledsPerMeter;
 int packetLength = faces*ledsTotal*3 + 1;
 
 Boolean demoMode = true;
@@ -58,8 +73,7 @@ Fixture rPanel;
 Fixture lPanel;
 
 void setup() {
-  //size(1200, 600, OPENGL);
-  size(1000, 500, OPENGL);
+  size(1100, 550, OPENGL);
   colorMode(RGB, 255);
   frameRate(FRAMERATE);
 
@@ -70,9 +84,9 @@ void setup() {
   pgl.endGL(); //end opengl
 
   //size(1680, 1000, OPENGL);
-  pCamera = new PeasyCam(this, 0, -0.25, 0, 30);
+  pCamera = new PeasyCam(this, 0, -8.0, 0, 45);
   pCamera.setMinimumDistance(20);
-  pCamera.setMaximumDistance(70);
+  pCamera.setMaximumDistance(80);
   pCamera.setWheelScale(0.25);
   pCamera.setYawRotationMode();
 
@@ -104,7 +118,6 @@ void setup() {
   demoTransmitter = new DemoTransmitter();
   demoTransmitter.start();
 }
-
 
 int convertByte(byte b) {
   int c = (b<0) ? 256+b : b;
@@ -176,32 +189,33 @@ void draw() {
 
 
   if (currentImage != null) {
+
     // Draw the front right panel
     pushMatrix();
     translate(cWidth+sPadding, 0, cWidth+0.05);
     rPanel.draw(currentImage, strips);
     popMatrix();
-
+    
     // Draw the front left panel
-    pushMatrix();
-    translate(cWidth+0.05, 0, cWidth+sPadding);
-    rotateY(-PI/2);
-    lPanel.draw(currentImage, 0);
-    popMatrix();
-
-    // Draw the back right panel
-    pushMatrix();
-    translate(cWidth+0.05, 0, -(cWidth+sPadding));
-    rotateY(PI/2);
-    rPanel.draw(currentImage, strips);
-    popMatrix();
-
-    // Draw the back left panel
-    pushMatrix();
-    translate(-(cWidth+sPadding), 0, cWidth+0.05);
-    rotateY(-PI);
-    lPanel.draw(currentImage, 0);
-    popMatrix();
+     pushMatrix();
+     translate(cWidth+0.05, 0, cWidth+sPadding);
+     rotateY(-PI/2);
+     lPanel.draw(currentImage, 0);
+     popMatrix();
+     
+     // Draw the back right panel
+     pushMatrix();
+     translate(cWidth+0.05, 0, -(cWidth+sPadding));
+     rotateY(PI/2);
+     rPanel.draw(currentImage, strips);
+     popMatrix();
+     
+     // Draw the back left panel
+     pushMatrix();
+     translate(-(cWidth+sPadding), 0, cWidth+0.05);
+     rotateY(-PI);
+     lPanel.draw(currentImage, 0);
+     popMatrix();
   } 
 
   imageHud.draw();
