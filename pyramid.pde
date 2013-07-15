@@ -1,7 +1,7 @@
 
 void drawPyramid() {
   stroke(0);
-  fill(64);
+  fill(32);
 
   pushMatrix();
   rotateY(PI/2);
