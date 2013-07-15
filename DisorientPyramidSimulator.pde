@@ -15,7 +15,7 @@ import javax.media.opengl.GL;
 //TriangleMesh mesh;
 //ToxiclibsSupport gfx;
 
-int FRAMERATE = 5;//15;
+int FRAMERATE = 15;
 
 //// Share this between the transmitter and simulator.
 int stripsPerPanel = 8;
