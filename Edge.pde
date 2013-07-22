@@ -10,6 +10,8 @@ class Edge {
   public int m_endNode;
 
   public color m_defaultColor;
+  
+  public float[] m_positions;
 
   // For LED Tree edges
   // @param name Name of the edge
@@ -27,31 +29,43 @@ class Edge {
     m_endNode = endNode;
 
     m_defaultColor = color(random(60, 255), random(60, 255), random(60, 255));  //delme
+    
+    computeLightPositions();
+  }
+  
+  void computeLightPositions() {
+    m_positions = new float[m_length*3];
+    
+    // just pre-compute the positions of each LED.
+    for(int i = 0; i < m_length; i++) {
+      float x = Nodes.get(m_startNode).m_posX - (Nodes.get(m_startNode).m_posX - Nodes.get(m_endNode).m_posX)/m_length*i;
+      float y = Nodes.get(m_startNode).m_posY - (Nodes.get(m_startNode).m_posY - Nodes.get(m_endNode).m_posY)/m_length*i;
+      float z = Nodes.get(m_startNode).m_posZ - (Nodes.get(m_startNode).m_posZ - Nodes.get(m_endNode).m_posZ)/m_length*i;
+      
+      m_positions[i*3 + 0] = x;
+      m_positions[i*3 + 1] = y;
+      m_positions[i*3 + 2] = z;
+    }
   }
 
   void draw(color[] imageData, int offset) {
     if (m_visible) {
-      for (int i = 0; i < m_length; i++) { 
+      pushStyle();
+      strokeWeight(4);
+      
+        for (int i = 0; i < m_length; i++) { 
+          // set the color based on the image data
+          color c = imageData[offset+(m_strip + (m_offset + i)*(faces*strips))];
+          stroke(c);
 
-        // Calculate the location based on the end points
-        float x = Nodes.get(m_startNode).m_posX - (Nodes.get(m_startNode).m_posX - Nodes.get(m_endNode).m_posX)/m_length*i;
-        float y = Nodes.get(m_startNode).m_posY - (Nodes.get(m_startNode).m_posY - Nodes.get(m_endNode).m_posY)/m_length*i;
-        float z = Nodes.get(m_startNode).m_posZ - (Nodes.get(m_startNode).m_posZ - Nodes.get(m_endNode).m_posZ)/m_length*i;
-
-        // set the color based on the image data
-        color c = imageData[offset+(m_strip + (m_offset + i)*(faces*strips))];
-        //color c = m_defaultColor;
-
-        // Draw the individual LEDs
-        pushMatrix();
-        translate(x, y, z);
-        stroke(c);
-        fill(c);
-        //scale(rad);
-        ellipse(0, 0, .04, .04);
-        //point(0, 0);
-        popMatrix();
-      }
+          // Draw the individual LEDs
+          pushMatrix();
+            translate(m_positions[i*3 + 0], m_positions[i*3 + 1], m_positions[i*3 + 2]);
+//          ellipse(0, 0, .04, .04);
+            point(0, 0);
+          popMatrix();
+        }
+      popStyle();
     }
   }
 }
