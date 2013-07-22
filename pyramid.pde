@@ -1,5 +1,7 @@
 
 void drawPyramid() {
+  pushStyle();
+  strokeWeight(1);
   stroke(0);
   fill(32);
 
@@ -83,4 +85,5 @@ void drawPyramid() {
       popMatrix();
     }
   }
+  popStyle();
 }

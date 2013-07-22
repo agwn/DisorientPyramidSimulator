@@ -15,7 +15,7 @@ import javax.media.opengl.GL;
 //TriangleMesh mesh;
 //ToxiclibsSupport gfx;
 
-int FRAMERATE = 15;
+int FRAMERATE = 60;
 
 //// Share this between the transmitter and simulator.
 int stripsPerPanel = 8;
@@ -179,10 +179,10 @@ color[] currentImage = null;
 
 void draw() {
 
-  background(color(0, 0, 20));
+  background(color(30, 0, 10));
 
   // Draw the ground
-  //drawGround();
+  drawGround();
 
   // Draw the pyramid
   drawPyramid();

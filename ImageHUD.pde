@@ -19,7 +19,17 @@ class ImageHud {
 
   void draw() {
     pCamera.beginHUD();
-    image(img, x, y);
+    pushStyle();
+      stroke(255);
+      strokeWeight(2);
+      fill(0);
+      rect(x,y,img.width, img.height);
+      image(img, x, y);
+    
+      fill(255);
+      textSize(24);
+      text(frameRate, x + img.width + 4, y + img.height - 10); 
+    popStyle();  
     pCamera.endHUD();
   }
 }
