@@ -97,14 +97,15 @@ class Edge {
 //  }
 
   void drawPointsGL(color[] imageData, int offset) {
+    float scale = 1.0 / 255.0;
     // Upload the new color data
     for (int i = 0; i < m_length; i++) { 
       // set the color based on the image data
       color c = imageData[offset+(m_strip + (m_offset + i)*(faces*strips))];
       // White color by default
-      m_cbuffer.put(red(c));
-      m_cbuffer.put(green(c));
-      m_cbuffer.put(blue(c));
+      m_cbuffer.put(red(c) * scale);
+      m_cbuffer.put(green(c) * scale);
+      m_cbuffer.put(blue(c) * scale);
     }
     m_cbuffer.rewind();
 
