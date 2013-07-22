@@ -1,6 +1,6 @@
 void drawGround() {
-  stroke(128, 51);
-  fill(128, 51);
+  stroke(0);
+  fill(50);
   
   int tilefactor = 8;
   float bound = 200;

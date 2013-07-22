@@ -12,7 +12,7 @@ int safeColor(int r, int g, int b) {
 
 class DemoTransmitter extends Thread {
 
-  int animationStep = 0;
+  float animationStep = 0;
   final int spacing = 10; 
 
   color[] MakeDemoFrame() {
@@ -23,7 +23,7 @@ class DemoTransmitter extends Thread {
       for (int j=0; j < ledsPerStrip; j++) {
         int loc = j*(faces*strips) +i;
 
-        if (animationStep == (j%spacing)) {
+        if (int(animationStep) == (j%spacing)) {
           imageData[loc] = safeColor(0,0,255);
         }
         else {
@@ -32,7 +32,7 @@ class DemoTransmitter extends Thread {
       }
     }
 
-    animationStep = (animationStep + 1)%spacing;
+    animationStep = (animationStep + .3)%spacing;
 
     return imageData;
   }
@@ -47,7 +47,7 @@ class DemoTransmitter extends Thread {
           color imageData[] = MakeDemoFrame();
           newImageQueue.put(imageData);
         }
-        Thread.sleep(0);
+        Thread.sleep(1);
       } 
       catch( InterruptedException e ) {
         println("Interrupted Exception caught");

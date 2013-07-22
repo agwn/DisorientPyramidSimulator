@@ -179,7 +179,7 @@ color[] currentImage = null;
 
 void draw() {
 
-  background(color(0, 0, 20));
+  background(color(30, 0, 10));
 
   // Draw the ground
   drawGround();
