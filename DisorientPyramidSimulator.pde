@@ -179,7 +179,8 @@ color[] currentImage = null;
 
 void draw() {
 
-  background(color(30, 0, 10));
+//  background(color(30, 0, 10));
+  background(0);
 
   // Draw the ground
   drawGround();
@@ -218,7 +219,7 @@ void draw() {
      popMatrix();
   } 
 
-  imageHud.draw();
+//  imageHud.draw();
 
   if (newImageQueue.size() > 0) {
     color[] newImage = (color[])newImageQueue.remove();
